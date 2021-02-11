@@ -6,6 +6,8 @@ spring:
   profiles:
     active: dev
 
+todo:
+  title: Todo App
 ---
 
 server:
@@ -33,3 +35,4 @@ dbconfig:
   server: localhostprod
   username: prod
   password: prod
+

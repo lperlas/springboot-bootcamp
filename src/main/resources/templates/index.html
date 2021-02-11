@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Todo List</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="webjars/bootstrap/4.6.0/css/bootstrap.min.css"
+          rel="stylesheet">
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm">
+            <h2><span th:text="${title}"></span></h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <a href="/addtodo" class="btn btn-primary" >Add New Task</a>
+    </div>
+
+    <div class="row" th:if="${ not#lists.isEmpty(todos)}">
+        <table class="table">
+            <tr>
+                <th></th>
+                <th>Task</th>
+                <th colspan="2"></th>
+            </tr>
+            <tr th:each="todo : ${todos}">
+                <td th:text="${todo.id}"></td>
+                <td th:text="${todo.todo}"></td>
+                <td><a th:href="@{/edittodo/{id}(id=${todo.id})}">Edit</a></td>
+                <td><a th:href="@{/deletetodo/{id}(id=${todo.id})}">Delete</a></td>
+            </tr>
+            <table>
+    </div>
+    <div class="row" th:unless="${ not#lists.isEmpty(todos)}">
+        <h5>No Task in Todo List</h5>
+    </div>
+    <script src="webjars/jquery/3.5.1/jquery.min.js"></script>
+    <script src="webjars/bootstrap/4.6.0/js/bootstrap.min.js"></script>
+</div>
+</body>
+</html>

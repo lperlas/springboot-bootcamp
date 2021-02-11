@@ -1,0 +1,24 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Edit Todo</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="webjars/bootstrap/4.6.0/css/bootstrap.min.css"
+          rel="stylesheet">
+</head>
+<body>
+
+
+<div class="container">
+    <div class="form-group">
+        <h2>Edit To Do Task</h2>
+        <form action="#" th:action="@{/edittodo}" th:object="${todo}" method="post">
+            <input id = "id" name = "id" type = "hidden" th:field="*{id}" />
+            <input class="form-control" type="text" th:field="*{todo}" id="task" placeholder="Enter Task Here">
+            <input type="submit" class="btn btn-primary " />
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
