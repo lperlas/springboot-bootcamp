@@ -1,9 +1,16 @@
 package com.bootcamp.springboot.model;
 
+import javax.persistence.*;
 import java.sql.Timestamp;
 
+@Entity
+@Table(name = "Todo_Perlas")
 public class ToDoModel {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     int id;
+    @Column(name = "todo")
     String todo;
 
     public ToDoModel(){}

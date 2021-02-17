@@ -30,40 +30,41 @@ public class IndexController {
     public String index(Model model) {
         model.addAttribute("title", title);
         model.addAttribute("todos", this.todoService.getAllTodo());
+        model.addAttribute("todoObj", new ToDoModel());
         return "index";
     }
 
-    @RequestMapping("/dbconfig")
-    public ResponseEntity<DBConfig> dbconfig() {
-        return new ResponseEntity<>(dbconfig, HttpStatus.OK);
+    @RequestMapping("/gettodo/{id}")
+    public ResponseEntity<ToDoModel> gettodo(@PathVariable("id") int id) {
+
+        return new ResponseEntity<>(this.todoService.getTodo(id), HttpStatus.OK);
     }
 
     @RequestMapping("/addtodo")
-    public String addTodoShowForm(Model model){
-        model.addAttribute("todo", new ToDoModel());
+    public String addTodoShowForm(ToDoModel todo){
         return "addtodo";
     }
 
     @RequestMapping(value = "/addtodo", method= RequestMethod.POST)
-    public String addTodoProcess(@ModelAttribute(value="todo") ToDoModel todo){
-        this.todoService.addTodo(todo);
+    public String addTodoProcess(@ModelAttribute("todoObj") ToDoModel model){
+        this.todoService.addTodo(model);
         return "redirect:/";
     }
 
     @RequestMapping("/edittodo/{id}")
-    public String editTodoShowForm(@PathVariable("id") long id, Model model){
+    public String editTodoShowForm(@PathVariable("id") int id, Model model){
         model.addAttribute("todo",this.todoService.getTodo(id));
         return "edittodo";
     }
 
     @RequestMapping(value = "/edittodo", method= RequestMethod.POST)
-    public String editTodoProcess(@ModelAttribute(value="todo") ToDoModel todo){
+    public String editTodoProcess(@ModelAttribute(value="todoObj") ToDoModel todo){
         this.todoService.editTodo(todo);
         return "redirect:/";
     }
 
     @GetMapping("/deletetodo/{id}")
-    public String deleteTodoProcess(@PathVariable("id") long id, Model model){
+    public String deleteTodoProcess(@PathVariable("id") int id, Model model){
         this.todoService.deleteTodo(id);
         return "redirect:/";
     }
