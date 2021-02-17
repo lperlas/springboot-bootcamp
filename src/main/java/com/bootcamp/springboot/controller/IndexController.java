@@ -26,6 +26,19 @@ public class IndexController {
     @Value("${todo.title}")
     private String title;
 
+    // Login form
+    @RequestMapping("/login.html")
+    public String login() {
+        return "login.html";
+    }
+
+    // Login form with error
+    @RequestMapping("/login-error.html")
+    public String loginError(Model model) {
+        model.addAttribute("loginError", true);
+        return "login.html";
+    }
+
     @RequestMapping("/")
     public String index(Model model) {
         model.addAttribute("title", title);
