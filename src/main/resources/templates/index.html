@@ -5,8 +5,32 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link href="webjars/bootstrap/4.6.0/css/bootstrap.min.css"
           rel="stylesheet">
+    <link href="webjars/datatables/1.10.23/css/jquery.dataTables.min.css"
+          rel="stylesheet">
 </head>
 <body>
+
+<nav class="navbar navbar-expand-md">
+    <div class="container">
+    <div class="navbar-header">
+        <a class="navbar-brand" href="#">ToDo App</a>
+    </div>
+    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+        <div class="navbar-nav">
+            <a href="#" class="nav-item nav-link active">ToDo List</a>
+            <a href="/users" class="nav-item nav-link">Users</a>
+            <a href="/roles" class="nav-item nav-link">Roles</a>
+        </div>
+        <div class="navbar-nav ml-auto">
+            <a href="/logout" class="nav-item nav-link">Logout</a>
+        </div>
+    </div>
+    </div>
+</nav>
 
 <div class="container">
     <div class="row">
@@ -15,34 +39,68 @@
         </div>
     </div>
 
-    <div class="row">
-        <a class="btn btn-primary" data-toggle="modal" data-target="#addEditTodoModal">Add New Task</a>
+    <div class="row" style="margin-bottom: 5px;">
+        <div class="col-10">
+            <a class="btn btn-primary" data-toggle="modal" data-target="#addEditTodoModal">Add New Task</a>
+        </div>
+        <div class="col-2">
+            <a class="btn btn-danger" href="/logout">Logout</a>
+        </div>
     </div>
 
-    <div class="row" th:if="${ not#lists.isEmpty(todos)}">
-        <table class="table">
-            <tr>
-                <th></th>
-                <th>Task</th>
-                <th colspan="2"></th>
-            </tr>
-            <tr th:each="todo : ${todos}">
-                <td th:text="${todo.id}"></td>
-                <td th:text="${todo.todo}"></td>
-                <td>
-                    <a href='#' data-toggle="modal" data-target="#addEditTodoModal" th:attrappend="data-id=${todo.id}">Edit</a>
-                </td>
-                <td>
-                    <a th:href="@{/deletetodo/{id}(id=${todo.id})}">Delete</a>
-                </td>
-            </tr>
-        <table>
+
+    <div class="row" style="margin-bottom: 5px;">
+<!--        th:if="${ not#lists.isEmpty(todos)}" >-->
+        <table id="todoList" style="width: 100%"></table>
+<!--        <table class="table">-->
+<!--            <tr>-->
+<!--                <th></th>-->
+<!--                <th>Task</th>-->
+<!--                <th colspan="2"></th>-->
+<!--            </tr>-->
+<!--            <tr th:each="todo : ${todos}">-->
+<!--                <td th:text="${todo.id}"></td>-->
+<!--                <td th:text="${todo.todo}"></td>-->
+<!--                <td>-->
+<!--                    <a href='#' data-toggle="modal" data-target="#addEditTodoModal" th:attrappend="data-id=${todo.id}">Edit</a>-->
+<!--                </td>-->
+<!--                <td>-->
+<!--                    <a th:href="@{/deletetodo/{id}(id=${todo.id})}">Delete</a>-->
+<!--                </td>-->
+<!--            </tr>-->
+<!--        </table>-->
     </div>
-    <div class="row" th:unless="${ not#lists.isEmpty(todos)}">
-        <h5>No Task in Todo List</h5>
-    </div>
+<!--    <div class="row" th:unless="${ not#lists.isEmpty(todos)}">-->
+<!--        <h5>No Task in Todo List</h5>-->
+<!--    </div>-->
     <script src="webjars/jquery/3.5.1/jquery.min.js"></script>
     <script src="webjars/bootstrap/4.6.0/js/bootstrap.min.js"></script>
+    <script src="webjars/datatables/1.10.23/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#todoList').DataTable({
+                responsive: true,
+                ajax : {
+                    url : '/todo/findall',
+                    dataSrc : ''
+                },
+                columns : [ {
+                    title : 'Id',
+                    data : 'id'
+                }, {
+                    title : 'ToDo',
+                    data : 'todo'
+                }, {
+                    data: null,
+                    className: "center",
+                    render: function ( data, type, todo, meta ) {
+                        return '<a href="#" data-toggle="modal" data-target="#addEditTodoModal" data-id="'+todo.id+'">Edit</a> | <a href="/deletetodo/'+todo.id+'">Delete</a>';
+                    }
+                }
+                ]
+            } );
+        } );
+    </script>
 </div>
 
 
@@ -92,6 +150,11 @@
 
                     }
                 });
+            }else{
+                $('#addTodoModalLabel').text('Add Todo');
+                $('#addeditForm').attr('action', 'addtodo');
+                $('#todo_id').val(0);
+                $('#task').val("");
             }
         });
 

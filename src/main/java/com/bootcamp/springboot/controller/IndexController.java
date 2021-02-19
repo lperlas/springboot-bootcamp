@@ -2,6 +2,7 @@ package com.bootcamp.springboot.controller;
 
 import com.bootcamp.springboot.config.DBConfig;
 import com.bootcamp.springboot.model.ToDoModel;
+import com.bootcamp.springboot.service.TodoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -9,9 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import com.bootcamp.springboot.service.TodoService;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/")
@@ -26,18 +24,17 @@ public class IndexController {
     @Value("${todo.title}")
     private String title;
 
-    // Login form
-    @RequestMapping("/login.html")
-    public String login() {
-        return "login.html";
+    @RequestMapping("/login")
+    public String login(Model model, String error) {
+        return "login";
     }
 
-    // Login form with error
-    @RequestMapping("/login-error.html")
-    public String loginError(Model model) {
-        model.addAttribute("loginError", true);
-        return "login.html";
+
+    @RequestMapping("/logout")
+    public String logout() {
+        return "login";
     }
+
 
     @RequestMapping("/")
     public String index(Model model) {
@@ -77,7 +74,7 @@ public class IndexController {
     }
 
     @GetMapping("/deletetodo/{id}")
-    public String deleteTodoProcess(@PathVariable("id") int id, Model model){
+    public String deleteTodoProcess(@PathVariable("id") int id){
         this.todoService.deleteTodo(id);
         return "redirect:/";
     }

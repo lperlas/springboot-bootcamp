@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Users</title>
+    <link href="webjars/bootstrap/4.6.0/css/bootstrap.min.css"
+          rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-expand-md">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">ToDo App</a>
+        </div>
+        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav">
+                <a href="/" class="nav-item nav-link">ToDo List</a>
+                <a href="#" class="nav-item nav-link active">Users</a>
+                <a href="/roles" class="nav-item nav-link">Roles</a>
+            </div>
+            <div class="navbar-nav ml-auto">
+                <a href="/logout" class="nav-item nav-link">Logout</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-sm">
+            <h2><span th:text="${title}"></span></h2>
+        </div>
+    </div>
+
+    <div class="row" style="margin-bottom: 5px;">
+        <div class="col-10">
+            <a class="btn btn-primary" data-toggle="modal" data-target="#addEditUserModal">Add User</a>
+        </div>
+        <div class="col-2">
+            <a class="btn btn-danger" href="/logout">Logout</a>
+        </div>
+    </div>
+
+    <div class="row" th:if="${ not#lists.isEmpty(usersList)}" style="margin-bottom: 5px;">
+        <table class="table">
+            <tr>
+                <th></th>
+                <th>Task</th>
+                <th colspan="2"></th>
+            </tr>
+            <tr th:each="user : ${usersList}">
+                <td th:text="${user.id}"></td>
+                <td th:text="${user.username}"></td>
+                <td>
+                    <a href='#' data-toggle="modal" data-target="#addEditUserModal" th:attrappend="data-id=${user.id}">Edit</a>
+                </td>
+                <td>
+                    <a th:href="@{/user/delete/{id}(id=${user.id})}">Delete</a>
+                </td>
+            </tr>
+            </table>
+    </div>
+    <div class="row" th:unless="${ not#lists.isEmpty(usersList)}">
+        <h5>No Users Exist</h5>
+    </div>
+    <script src="webjars/jquery/3.5.1/jquery.min.js"></script>
+    <script src="webjars/bootstrap/4.6.0/js/bootstrap.min.js"></script>
+
+
+    <div class="modal fade" id="addEditUserModal" tabindex="-1" role="dialog" aria-labelledby="addUserModal"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id='addeditForm' action="#" th:action="@{/users/adduser}" th:object="${userNew}" method="post">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addUserModalLabel">Add User</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+
+                            <input id = "user_id" name = "id" type = "hidden" th:field="*{id}" />
+                            <label >Username</label>:
+                            <input class="form-control" type="text" th:field="*{username}" id="username">
+                            <label >Password</label>:
+                            <input class="form-control" type="password" th:field="*{password}" id="password">
+                            <input id = "active" name = "active" type = "hidden" th:field="*{active}" value="1"/>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <input type="submit" class="btn btn-primary" value="Save changes">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#addEditUserModal').on('show.bs.modal', function(event) {
+        var id = $(event.relatedTarget).data('id');
+
+        if(id != undefined){
+            var url = '/users/getuser/' + id;
+            $('#addUserModalLabel').text('Edit User');
+            $('#addeditForm').attr('action', '/users/edituser');
+            $.ajax({
+                url: url,
+                success: function (data) {
+                    $('#user_id').val(data.id);
+                    $('#username').val(data.username);
+
+                }
+            });
+        }else{
+            $('#addUserModalLabel').text('Add User');
+            $('#addeditForm').attr('action', '/users/adduser');
+            $('#user_id').val("");
+            $('#username').val("");
+        }
+    });
+
+</script>
+</body>
+</html>

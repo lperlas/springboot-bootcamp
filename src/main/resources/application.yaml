@@ -19,7 +19,7 @@ spring:
 
 
 todo:
-  title: Todo App
+  title: Todo List
 ---
 
 server:

@@ -37,7 +37,7 @@ public class TodoService {
     }
 
     public void editTodo(ToDoModel todo){
-        repo.updateTask(todo.getId(), todo.getTodo());
+        repo.save(todo);
 //
 //        todos.stream()
 //                .filter(t -> todo.getId() == t.getId())

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Roles</title>
+    <link href="webjars/bootstrap/4.6.0/css/bootstrap.min.css"
+          rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-expand-md">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">ToDo App</a>
+        </div>
+        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav">
+                <a href="/" class="nav-item nav-link">ToDo List</a>
+                <a href="/users" class="nav-item nav-link">Users</a>
+                <a href="#" class="nav-item nav-link active">Roles</a>
+            </div>
+            <div class="navbar-nav ml-auto">
+                <a href="/logout" class="nav-item nav-link">Logout</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-sm">
+            <h2><span th:text="${title}"></span></h2>
+        </div>
+    </div>
+
+    <div class="row" style="margin-bottom: 5px;">
+        <div class="col-10">
+            <a class="btn btn-primary" data-toggle="modal" data-target="#addEditRoleModal">Add Role</a>
+        </div>
+        <div class="col-2">
+            <a class="btn btn-danger" href="/logout">Logout</a>
+        </div>
+    </div>
+
+    <div class="row" th:if="${ not#lists.isEmpty(roleList)}" style="margin-bottom: 5px;">
+        <table class="table">
+            <tr>
+                <th></th>
+                <th>Description</th>
+                <th>Name</th>
+                <th colspan="2"></th>
+            </tr>
+            <tr th:each="role : ${roleList}">
+                <td th:text="${role.id}"></td>
+                <td th:text="${role.description}"></td>
+                <td th:text="${role.roleName}"></td>
+                <td>
+                    <a href='#' data-toggle="modal" data-target="#addEditRoleModal" th:attrappend="data-id=${role.id}">Edit</a>
+                </td>
+                <td>
+                    <a th:href="@{/role/delete/{id}(id=${role.id})}">Delete</a>
+                </td>
+            </tr>
+            </table>
+    </div>
+    <div class="row" th:unless="${ not#lists.isEmpty(roleList)}">
+        <h5>No Roles Exist</h5>
+    </div>
+    <script src="webjars/jquery/3.5.1/jquery.min.js"></script>
+    <script src="webjars/bootstrap/4.6.0/js/bootstrap.min.js"></script>
+
+
+    <div class="modal fade" id="addEditRoleModal" tabindex="-1" role="dialog" aria-labelledby="addRoleModal"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id='addeditForm' action="#" th:action="@{/roles/add}" th:object="${rolesNew}" method="post">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addRoleModalLabel">Add User</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+
+                            <input id = "role_id" name = "id" type = "hidden" th:field="*{id}" />
+                            <label >Description</label>:
+                            <input class="form-control" type="text" th:field="*{description}" id="description">
+                            <label >Role Name</label>:
+                            <input class="form-control" type="text" th:field="*{roleName}" id="role_name">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <input type="submit" class="btn btn-primary" value="Save changes">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#addEditRoleModal').on('show.bs.modal', function(event) {
+        var id = $(event.relatedTarget).data('id');
+
+        if(id != undefined){
+            var url = '/roles/getrole/' + id;
+            $('#addRoleModalLabel').text('Edit Role');
+            $('#addeditForm').attr('action', '/roles/editrole');
+            $.ajax({
+                url: url,
+                success: function (data) {
+                    $('#role_id').val(data.id);
+                    $('#description').val(data.description);
+                    $('#role_name').val(data.roleName);
+
+                }
+            });
+        }else{
+            $('#addUserModalLabel').text('Add Role');
+            $('#addeditForm').attr('action', '/roles/addrole');
+            $('#role_id').val("");
+            $('#description').val("");
+            $('#role_name').val("");
+        }
+    });
+
+</script>
+</body>
+</html>

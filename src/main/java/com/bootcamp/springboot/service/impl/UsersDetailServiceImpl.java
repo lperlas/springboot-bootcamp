@@ -1,6 +1,7 @@
-package com.bootcamp.springboot.service;
+package com.bootcamp.springboot.service.impl;
 
 import com.bootcamp.springboot.model.Users;
+import com.bootcamp.springboot.service.UsersService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,8 @@ import java.util.Set;
 public class UsersDetailServiceImpl implements UserDetailsService{
     private final Logger logger = LoggerFactory.getLogger(UsersDetailServiceImpl.class);
 
-    @Autowired UsersService usersService;
+    @Autowired
+    UsersService usersService;
 
 
     @Override
